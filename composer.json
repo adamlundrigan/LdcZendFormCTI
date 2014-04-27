@@ -1,0 +1,31 @@
+{
+    "name": "adamlundrigan/ldc-zend-form-cti",
+    "description": "Zend\\Form\\Collection meets Class Table Inheritance",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Adam Lundrigan",
+            "email": "adam@lundrigan.ca"
+        }
+    ],
+    "repositories": [
+    	{
+    		"type": "composer",
+    		"url": "https://packages.zendframework.com"
+   		}
+    ],
+    "require": {
+        "zendframework/zend-form": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9",
+        "fabpot/php-cs-fixer": "@stable",
+        "zendframework/zend-servicemanager": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "LdcZendFormCTI\\": "src/"
+        }
+    }
+}
