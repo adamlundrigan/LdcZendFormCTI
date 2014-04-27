@@ -11,3 +11,6 @@ composer.lock
 vendor/*
 
 vagrant/.vagrant
+
+tests/log/*
+tests/TestConfiguration.php
