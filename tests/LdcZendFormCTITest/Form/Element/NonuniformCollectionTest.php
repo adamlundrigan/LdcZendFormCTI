@@ -42,7 +42,7 @@ class NonuniformCollectionTest extends TestCase
         $collAccountRoles = new NonuniformCollection();
         $collAccountRoles->setName('roles');
         $collAccountRoles->setTargetElement(array(
-        	'LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleAEntity' => $fsRoleA,
+            'LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleAEntity' => $fsRoleA,
             'LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleBEntity' => $fsRoleB,
         ));
         $fsAccount->add($collAccountRoles);

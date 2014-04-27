@@ -39,6 +39,7 @@ class RoleBEntity
     public function setB($value)
     {
         $this->b = $value;
+
         return $this;
     }
 

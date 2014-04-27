@@ -39,6 +39,7 @@ class AccountEntity
     public function setRoles($roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
