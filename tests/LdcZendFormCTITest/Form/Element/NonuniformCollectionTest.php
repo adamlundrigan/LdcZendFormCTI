@@ -101,4 +101,58 @@ class NonuniformCollectionTest extends TestCase
         $this->assertEquals($someFakeData['account']['roles'][2]['id'], $roles[2]->getId());
         $this->assertEquals($someFakeData['account']['roles'][2]['b'], $roles[2]->getB());
     }
+
+    /**
+     * @dataProvider providerTestTemplateElementsArePreparedCorrectly
+     *
+     * @param bool   $shouldPrepareTemplate value passed to setShouldCreateTemplate
+     * @param string $expectedName          expected name of the template fieldsets
+     */
+    public function testTemplateElementsArePreparedCorrectly($shouldPrepareTemplate, $expectedName)
+    {
+        $form = new Form();
+
+        // Add the 'account' fieldset as the base fieldset
+        $fsAccount = new AccountFieldset();
+        $fsAccount->setUseAsBaseFieldset(true);
+        $fsAccount->setHydrator(new ClassMethods(false));
+        $fsAccount->setObject(new AccountEntity());
+
+        // Create a fieldset for each role type, and seed them with the prototype object
+        // and an instance of NonuniformCollectionHydrator
+
+        $fsRoleA = new RoleAFieldset();
+        $fsRoleA->setObject(new RoleAEntity());
+        $fsRoleA->setHydrator(new NonuniformCollectionHydrator(new ClassMethods(false)));
+
+        $fsRoleB = new RoleBFieldset();
+        $fsRoleB->setObject(new RoleBEntity());
+        $fsRoleB->setHydrator(new NonuniformCollectionHydrator(new ClassMethods(false)));
+
+        // Build the NonuniformCollection by telling it what entitiy types to expect and
+        // what fieldset is associated with each one.  Attach it to the Account fieldset
+        $collAccountRoles = new NonuniformCollection();
+        $collAccountRoles->setName('roles');
+        $collAccountRoles->setTargetElement(array(
+            'LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleAEntity' => $fsRoleA,
+            'LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleBEntity' => $fsRoleB,
+        ));
+        $collAccountRoles->setShouldCreateTemplate($shouldPrepareTemplate);
+        $fsAccount->add($collAccountRoles);
+        $form->add($fsAccount);
+        $form->prepare();
+
+        $templates = $collAccountRoles->getTemplateElement();
+        foreach ($templates as $objTemplate) {
+            $this->assertEquals($expectedName, $objTemplate->getName());
+        }
+    }
+
+    public function providerTestTemplateElementsArePreparedCorrectly()
+    {
+        return [
+            [true, 'account[roles][__index__]'],
+            [false, '__index__'],
+        ];
+    }
 }

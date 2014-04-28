@@ -65,16 +65,22 @@ class NonuniformCollection extends Collection
      */
     public function prepareElement(FormInterface $form)
     {
+        $name = $this->getName();
+
         // Create a template that will also be prepared
         if ($this->shouldCreateTemplate) {
             $templateElement = $this->getTemplateElement();
-            foreach ( (array) $templateElement as $item ) {
-                $this->add($item);
+            foreach ( (array) $templateElement as $elementOrFieldset ) {
+                $elementOrFieldset->setName($name . '[' . $elementOrFieldset->getName() . ']');
+
+                // Recursively prepare elements
+                if ($elementOrFieldset instanceof ElementPrepareAwareInterface) {
+                    $elementOrFieldset->prepareElement($form);
+                }
             }
         }
 
         // Zend\Form\Fieldset::prepareElement
-        $name = $this->getName();
         foreach ($this->byName as $elementOrFieldset) {
             $elementOrFieldset->setName($name . '[' . $elementOrFieldset->getName() . ']');
 
