@@ -150,9 +150,9 @@ class NonuniformCollectionTest extends TestCase
 
     public function providerTestTemplateElementsArePreparedCorrectly()
     {
-        return [
-            [true, 'account[roles][__index__]'],
-            [false, '__index__'],
-        ];
+        return array(
+            array( true, 'account[roles][__index__]' ),
+            array( false, '__index__' ),
+        );
     }
 }
