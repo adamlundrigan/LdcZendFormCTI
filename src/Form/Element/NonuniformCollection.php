@@ -13,7 +13,54 @@ use Zend\Form\Element\Collection;
 
 class NonuniformCollection extends Collection
 {
+    protected $discriminatorFieldName = '___class';
+
     protected $targetElement = array();
+
+    protected $templateElement = array();
+
+    protected $shouldCreateChildrenOnPrepareElement = false;
+
+    /**
+     * Additional accepted options added for NonuniformCollection:
+     * - discriminator_field_name: the data key which holds the discriminator
+     *
+     * @param  array|Traversable $options
+     * @return Collection
+     */
+    public function setOptions($options)
+    {
+        parent::setOptions($options);
+
+        if ( isset($options['discriminator_field_name']) ) {
+            $this->setDiscriminatorFieldName($options['discriminator_field_name']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set name of form field which will be used as discriminator
+     *
+     * @param  string     $fn
+     * @return Collection
+     */
+    public function setDiscriminatorFieldName($fn)
+    {
+        $this->discriminatorFieldName = $fn;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve name of form field used as discriminator
+     *
+     * @return string
+     */
+    public function getDiscriminatorFieldName()
+    {
+        return $this->discriminatorFieldName;
+    }
 
     /**
      * Set the target element
@@ -24,8 +71,7 @@ class NonuniformCollection extends Collection
      */
     public function setTargetElement($set)
     {
-        foreach ($set as $elementOrFieldset) {
-            $discriminator = get_class($elementOrFieldset->getObject());
+        foreach ($set as $discriminator => $elementOrFieldset) {
             if (is_array($elementOrFieldset)
                || ($elementOrFieldset instanceof Traversable && !$elementOrFieldset instanceof ElementInterface)
             ) {
@@ -46,16 +92,6 @@ class NonuniformCollection extends Collection
 
         return $this;
     }
-    /**
-     * If both count and targetElement are set, add them to the fieldset
-     *
-     * @return void
-     */
-    public function prepareFieldset()
-    {
-        // @TODO We don't do any advance fieldset construction. Should we?
-    }
-
 
     /**
      * Prepare the collection by adding a dummy template element if the user want one
@@ -67,6 +103,10 @@ class NonuniformCollection extends Collection
     {
         $name = $this->getName();
 
+        // Purposefully omitted shouldCreateChildrenOnPrepareElement block
+        // as that functionality is not applicable in this case
+        // (only works when there is a single target element)
+
         // Create a template that will also be prepared
         if ($this->shouldCreateTemplate) {
             $templateElement = $this->getTemplateElement();
@@ -77,12 +117,13 @@ class NonuniformCollection extends Collection
                 if ($elementOrFieldset instanceof ElementPrepareAwareInterface) {
                     $elementOrFieldset->prepareElement($form);
                 }
+                $this->add($elementOrFieldset);
             }
         }
 
         // Zend\Form\Fieldset::prepareElement
         foreach ($this->byName as $elementOrFieldset) {
-            $elementOrFieldset->setName($name . '[' . $elementOrFieldset->getName() . ']');
+            $elementOrFieldset->setName($this->getName() . '[' . $elementOrFieldset->getName() . ']');
 
             // Recursively prepare elements
             if ($elementOrFieldset instanceof ElementPrepareAwareInterface) {
@@ -92,8 +133,9 @@ class NonuniformCollection extends Collection
 
         // The template element has been prepared, but we don't want it to be rendered nor validated, so remove it from the list
         if ($this->shouldCreateTemplate) {
-            foreach ( (array) $this->templatePlaceholder as $item ) {
-                $this->remove($item);
+            $templateElement = $this->getTemplateElement();
+            foreach ( (array) $templateElement as $elementOrFieldset ) {
+                $this->remove($elementOrFieldset);
             }
         }
     }
@@ -121,62 +163,52 @@ class NonuniformCollection extends Collection
             return;
         }
 
-        if (count($data) < $this->getCount()) {
+        if (!$this->allowRemove && count($data) < $this->count) {
+            throw new Exception\DomainException(sprintf(
+                'There are fewer elements than specified in the collection (%s). Either set the allow_remove option '
+                . 'to true, or re-submit the form.',
+                get_class($this)
+            ));
+        }
+
+        // Check to see if elements have been replaced or removed
+        foreach ($this->byName as $name => $elementOrFieldset) {
+            if (isset($data[$name])) {
+                continue;
+            }
+
             if (!$this->allowRemove) {
                 throw new Exception\DomainException(sprintf(
-                    'There are fewer elements than specified in the collection (%s). Either set the allow_remove option ' .
-                    'to true, or re-submit the form.',
+                    'Elements have been removed from the collection (%s) but the allow_remove option is not true.',
                     get_class($this)
-                    )
-                );
+                ));
             }
 
-            // If there are less data and that allowRemove is true, we remove elements that are not presents
-            $this->setCount(count($data));
-            foreach ($this->byName as $name => $elementOrFieldset) {
-                if (isset($data[$name])) {
-                    continue;
-                }
+            $this->remove($name);
+        }
 
-                $this->remove($name);
+        $discrKey = $this->getDiscriminatorFieldName();
+
+        foreach ($data as $key => $value) {
+            if ($this->has($key)) {
+                $elementOrFieldset = $this->get($key);
+            } else {
+                $elementOrFieldset = $this->addNewTargetElementInstance($key, $value[$discrKey]);
+
+                if ($key > $this->lastChildIndex) {
+                    $this->lastChildIndex = $key;
+                }
+            }
+
+            if ($elementOrFieldset instanceof FieldsetInterface) {
+                $elementOrFieldset->populateValues($value);
+            } else {
+                $elementOrFieldset->setAttribute('value', $value);
             }
         }
 
-        if ( ! empty($this->targetElement) ) {
-            foreach ($this->byName as $name => $fieldset) {
-                if (isset($data[$name])) {
-                    $fieldset->populateValues($data[$name]);
-                    unset($data[$name]);
-                }
-            }
-        } else {
-            foreach ($this->byName as $name => $element) {
-                $element->setAttribute('value', $data[$name]);
-                unset($data[$name]);
-            }
-        }
-
-        // If there are still data, this means that elements or fieldsets were dynamically added. If allowed by the user, add them
-        if (!empty($data) && $this->allowAdd) {
-            foreach ($data as $key => $value) {
-                $elementOrFieldset = clone $this->targetElement[$value['___class']];
-                $elementOrFieldset->setName($key);
-
-                if ($elementOrFieldset instanceof FieldsetInterface) {
-                    $elementOrFieldset->populateValues($value);
-                } else {
-                    $elementOrFieldset->setAttribute('value', $value);
-                }
-
-                $this->add($elementOrFieldset);
-            }
-        } elseif (!empty($data) && !$this->allowAdd) {
-            throw new Exception\DomainException(sprintf(
-                'There are more elements than specified in the collection (%s). Either set the allow_add option ' .
-                'to true, or re-submit the form.',
-                get_class($this)
-                )
-            );
+        if (!$this->createNewObjects()) {
+            $this->replaceTemplateObjects();
         }
     }
 
@@ -190,11 +222,16 @@ class NonuniformCollection extends Collection
             return array();
         }
 
+        $discrKey = $this->getDiscriminatorFieldName();
+        $methodFilter = new \Zend\Filter\Word\UnderscoreToCamelCase();
+        $discrMethod = 'get' . $methodFilter->filter($discrKey);
+
         $values = array();
         foreach ($this->object as $key => $value) {
-            $discriminator = get_class($value);
+
+            $discriminator = $value->{$discrMethod}();
             $hydrator = $this->targetElement[$discriminator]->getHydrator();
-            if (is_callable(array($hydrator, 'extract'))) {
+            if ($hydrator) {
                 $values[$key] = $hydrator->extract($value);
             } elseif ($value instanceof $this->targetElement[$discriminator]->object) {
                 // @see https://github.com/zendframework/zf2/pull/2848
@@ -208,23 +245,81 @@ class NonuniformCollection extends Collection
                     }
                 }
             }
-            unset($values['___class']);
         }
 
         return $values;
     }
 
-    protected $templateElement = array();
-    public function getTemplateElement()
+    /**
+     * Create a new instance of the target element
+     *
+     * @param  string           $discriminator Discriminator of target element
+     * @return ElementInterface
+     */
+    protected function createNewTargetElementInstance($discriminator = NULL)
     {
-        if (empty($this->templateElement)) {
-            $this->templateElement = array();
-            foreach ($this->targetElement as $class=>$fieldset) {
-                $this->templateElement[$class] = clone $fieldset;
-                $this->templateElement[$class]->setName($this->templatePlaceholder);
-            }
+        if ( !isset($this->targetElement[$discriminator]) ) {
+            return null;
         }
 
-        return $this->templateElement;
+        return clone $this->targetElement[$discriminator];
+    }
+
+    /**
+     * Add a new instance of the target element
+     *
+     * @param  string                    $name
+     * @param  string                    $discriminator
+     * @return ElementInterface
+     * @throws Exception\DomainException
+     */
+    protected function addNewTargetElementInstance($name, $discriminator = NULL)
+    {
+        $this->shouldCreateChildrenOnPrepareElement = false;
+
+        $elementOrFieldset = $this->createNewTargetElementInstance($discriminator);
+        if (! $elementOrFieldset) {
+            throw new Exception\DomainException(sprintf(
+                'The discriminator you supplied (%s) is not valid',
+                $discriminator
+            ));
+        }
+        $elementOrFieldset->setName($name);
+
+        $this->add($elementOrFieldset);
+
+        if (!$this->allowAdd && $this->count() > $this->count) {
+            throw new Exception\DomainException(sprintf(
+                'There are more elements than specified in the collection (%s). Either set the allow_add option ' .
+                'to true, or re-submit the form.',
+                get_class($this)
+            ));
+        }
+
+        return $elementOrFieldset;
+    }
+
+    /**
+     * Create a dummy template element
+     *
+     * @return null|ElementInterface|FieldsetInterface
+     */
+    protected function createTemplateElement()
+    {
+        if (!$this->shouldCreateTemplate) {
+            return null;
+        }
+
+        if ($this->templateElement) {
+            return $this->templateElement;
+        }
+
+        $element = array();
+        foreach ($this->targetElement as $discr=>$fieldset) {
+            $element[$discr] = clone $fieldset;
+            $element[$discr]->setName($this->templatePlaceholder);
+        }
+
+        return $element;
     }
 }
