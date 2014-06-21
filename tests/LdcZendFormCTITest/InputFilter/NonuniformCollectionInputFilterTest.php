@@ -2,9 +2,18 @@
 namespace LdcZendFormCTITest\InputFilter;
 
 use LdcZendFormCTITest\TestCase;
+use LdcZendFormCTI\InputFilter\NonuniformCollectionInputFilter;
 
 class NonuniformCollectionInputFilterTest extends TestCase
 {
+
+    public function testSetInputFilterRejectsNonTraversableArgument()
+    {
+        $this->setExpectedException('Zend\InputFilter\Exception\RuntimeException');
+
+        $obj = new NonuniformCollectionInputFilter();
+        $obj->setInputFilter('test');
+    }
 
     public function testHappyCaseWorksProperly()
     {

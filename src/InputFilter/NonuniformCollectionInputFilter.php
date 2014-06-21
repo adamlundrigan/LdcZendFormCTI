@@ -38,14 +38,22 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
     /**
      * Set the input filter to use when looping the data
      *
-     * @param  BaseInputFilter|array|Traversable $inputFilter
+     * @param  array|Traversable          $inputFilter
      * @throws Exception\RuntimeException
      * @return CollectionInputFilter
      */
     public function setInputFilter($filterSet)
     {
-        $this->inputFilter = array();
+        if ( ! is_array($filterSet) && ! $filterSet instanceof Traversable) {
+            throw new Exception\RuntimeException(sprintf(
+                '%s expects an array of instances of %s; received "%s"',
+                __METHOD__,
+                'Zend\InputFilter\BaseInputFilter',
+                (is_object($filterSet) ? get_class($filterSet) : gettype($filterSet))
+            ));
+        }
 
+        $this->inputFilter = array();
         foreach ($filterSet as $discriminator => $inputFilter) {
             if (is_array($inputFilter) || $inputFilter instanceof Traversable) {
                 $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
