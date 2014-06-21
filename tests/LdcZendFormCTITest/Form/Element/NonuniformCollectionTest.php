@@ -7,6 +7,14 @@ use LdcZendFormCTI\Form\Element\NonuniformCollection;
 class NonuniformCollectionTest extends TestCase
 {
 
+    public function testSetDiscriminatorFieldNameOption()
+    {
+        $obj = new NonuniformCollection('test', array(
+            'discriminator_field_name' => 'foobar',
+        ));
+        $this->assertEquals('foobar', $obj->getDiscriminatorFieldName());
+    }
+
     public function testSetTargetElementRejectsNonTraversableArgument()
     {
         $this->setExpectedException('Zend\Form\Exception\InvalidArgumentException');

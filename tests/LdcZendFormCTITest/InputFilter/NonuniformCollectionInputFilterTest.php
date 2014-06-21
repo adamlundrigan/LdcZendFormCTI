@@ -15,6 +15,44 @@ class NonuniformCollectionInputFilterTest extends TestCase
         $obj->setInputFilter('test');
     }
 
+    public function testSetInputFilterDefersToFormFactoryToCreateElementFromNonElementArgument()
+    {
+        $targetElement = array('name' => 'foobar');
+
+        $mockElement = \Mockery::mock('Zend\InputFilter\BaseInputFilter');
+
+        $mockFormManager = \Mockery::mock('Zend\InputFilter\Factory');
+        $mockFormManager->shouldReceive('createInputFilter')->withArgs(array($targetElement))->once()->andReturn($mockElement);
+
+        $obj = \Mockery::mock('LdcZendFormCTI\InputFilter\NonuniformCollectionInputFilter[getFactory]');
+        $obj->shouldReceive('getFactory')->once()->andReturn($mockFormManager);
+
+        $obj->setInputFilter(array('test' => $targetElement));
+        $this->assertEquals(array('test' => $mockElement), $obj->getInputFilter());
+    }
+
+    public function testSetInputFilterWillThrowExceptionWhenFormFactoryCannotCreateElement()
+    {
+        $targetElement = array('name' => 'foobar');
+
+        $mockFormManager = \Mockery::mock('Zend\InputFilter\Factory');
+        $mockFormManager->shouldReceive('createInputFilter')->withArgs(array($targetElement))->once()->andReturnNull();
+
+        $obj = \Mockery::mock('LdcZendFormCTI\InputFilter\NonuniformCollectionInputFilter[getFactory]');
+        $obj->shouldReceive('getFactory')->once()->andReturn($mockFormManager);
+
+        $this->setExpectedException('Zend\InputFilter\Exception\RuntimeException');
+        $obj->setInputFilter(array('test' => $targetElement));
+    }
+
+    public function testSetInputFilterWillThrowExceptionWhenSuppliedElementIsInvalid()
+    {
+        $this->setExpectedException('Zend\InputFilter\Exception\RuntimeException');
+
+        $obj = new NonuniformCollectionInputFilter();
+        $obj->setInputFilter(array('test' => 'notgonnawork'));
+    }
+
     public function testHappyCaseWorksProperly()
     {
         $dataset = $this->getTestingDataset();
@@ -59,4 +97,43 @@ class NonuniformCollectionInputFilterTest extends TestCase
         $this->assertArrayNotHasKey('2', $messages);
     }
 
+    public function testValidatesEmptyDataWhenIsRequiredIsFalse()
+    {
+        $inputFilter = $this->getTestingInputFilter();
+        $inputFilter->setIsRequired(false);
+        $inputFilter->setData(array());
+        $this->assertTrue($inputFilter->isValid());
+    }
+
+    public function testRejectsEmptyDataWhenIsRequiredIsTrue()
+    {
+        $inputFilter = $this->getTestingInputFilter();
+        $inputFilter->setIsRequired(true);
+        $inputFilter->setData(array());
+        $this->assertFalse($inputFilter->isValid());
+    }
+
+    public function testIsValidRejectsWhenSuppliedDataHasTooFewElements()
+    {
+        $dataset = $this->getTestingDataset();
+
+        $inputFilter = $this->getTestingInputFilter();
+        $inputFilter->setData($dataset['account']['roles']);
+        $inputFilter->setCount(99);
+        $this->assertFalse($inputFilter->isValid());
+    }
+
+    public function testPassingDataWithoutKnownValidator()
+    {
+        $obj = new NonuniformCollectionInputFilter();
+        $obj->setDiscriminatorFieldName('test');
+        $obj->setData(array(array('test' => 'notfound')));
+
+        $this->assertFalse($obj->isValid());
+
+        $messages = $obj->getMessages();
+        $this->assertArrayHasKey('0', $messages);
+        $this->assertArrayHasKey('test', $messages[0]);
+        $this->assertStringStartsWith('Could not map provided value (notfound)', $messages[0]['test']);
+    }
 }
