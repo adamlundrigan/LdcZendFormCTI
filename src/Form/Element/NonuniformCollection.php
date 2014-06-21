@@ -65,12 +65,20 @@ class NonuniformCollection extends Collection
     /**
      * Set the target element
      *
-     * @param  ElementInterface|array|Traversable            $elementOrFieldset
+     * @param  array|Traversable                             $set
      * @return Collection
      * @throws \Zend\Form\Exception\InvalidArgumentException
      */
     public function setTargetElement($set)
     {
+        if ( ! is_array($set) && ! $set instanceof Traversable ) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s requires that $set be an array or object implementing Traversable; received "%s"',
+                __METHOD__,
+                (is_object($set) ? get_class($set) : gettype($set))
+            ));
+        }
+
         foreach ($set as $discriminator => $elementOrFieldset) {
             if (is_array($elementOrFieldset)
                || ($elementOrFieldset instanceof Traversable && !$elementOrFieldset instanceof ElementInterface)

@@ -2,9 +2,18 @@
 namespace LdcZendFormCTITest\Form\Element;
 
 use LdcZendFormCTITest\TestCase;
+use LdcZendFormCTI\Form\Element\NonuniformCollection;
 
 class NonuniformCollectionTest extends TestCase
 {
+
+    public function testSetTargetElementRejectsNonTraversableArgument()
+    {
+        $this->setExpectedException('Zend\Form\Exception\InvalidArgumentException');
+
+        $obj = new NonuniformCollection();
+        $obj->setTargetElement('test');
+    }
 
     public function testBasicSmokeTestForDataExtractionFromPrebuiltEntityStructure()
     {
