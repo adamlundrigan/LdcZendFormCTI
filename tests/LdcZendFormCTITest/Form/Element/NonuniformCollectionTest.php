@@ -15,6 +15,44 @@ class NonuniformCollectionTest extends TestCase
         $obj->setTargetElement('test');
     }
 
+    public function testSetTargetElementDefersToFormFactoryToCreateElementFromNonElementArgument()
+    {
+        $targetElement = array('name' => 'foobar');
+
+        $mockElement = \Mockery::mock('Zend\Form\ElementInterface');
+
+        $mockFormManager = \Mockery::mock('Zend\Form\Factory');
+        $mockFormManager->shouldReceive('create')->withArgs(array($targetElement))->once()->andReturn($mockElement);
+
+        $obj = \Mockery::mock('LdcZendFormCTI\Form\Element\NonuniformCollection[getFormFactory]');
+        $obj->shouldReceive('getFormFactory')->once()->andReturn($mockFormManager);
+
+        $obj->setTargetElement(array('test' => $targetElement));
+        $this->assertEquals(array('test' => $mockElement), $obj->getTargetElement());
+    }
+
+    public function testSetTargetElementWillThrowExceptionWhenFormFactoryCannotCreateElement()
+    {
+        $targetElement = array('name' => 'foobar');
+
+        $mockFormManager = \Mockery::mock('Zend\Form\Factory');
+        $mockFormManager->shouldReceive('create')->withArgs(array($targetElement))->once()->andReturnNull();
+
+        $obj = \Mockery::mock('LdcZendFormCTI\Form\Element\NonuniformCollection[getFormFactory]');
+        $obj->shouldReceive('getFormFactory')->once()->andReturn($mockFormManager);
+
+        $this->setExpectedException('Zend\Form\Exception\InvalidArgumentException');
+        $obj->setTargetElement(array('test' => $targetElement));
+    }
+
+    public function testSetTargetElementWillThrowExceptionWhenSuppliedElementIsInvalid()
+    {
+        $this->setExpectedException('Zend\Form\Exception\InvalidArgumentException');
+
+        $obj = new NonuniformCollection();
+        $obj->setTargetElement(array('test' => 'notgonnawork'));
+    }
+
     public function testBasicSmokeTestForDataExtractionFromPrebuiltEntityStructure()
     {
         $someFakeData = $this->getTestingDataset();
