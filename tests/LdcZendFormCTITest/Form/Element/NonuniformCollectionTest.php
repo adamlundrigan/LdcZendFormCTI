@@ -118,7 +118,7 @@ class NonuniformCollectionTest extends TestCase
         $this->assertNotEmpty($templates);
 
         foreach ($templates as $objTemplate) {
-            $this->assertEquals('__index__', $objTemplate->getName());
+            $this->assertEquals('account[roles][__index__]', $objTemplate->getName());
         }
     }
 

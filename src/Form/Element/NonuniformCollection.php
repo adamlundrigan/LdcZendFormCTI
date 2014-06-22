@@ -111,9 +111,22 @@ class NonuniformCollection extends Collection
     {
         $name = $this->getName();
 
-        // Purposefully omitted both shouldCreateChildrenOnPrepareElement block
-        // and shouldCreateTemplage block as that functionality is not
-        // applicable in this case (only works when there is a single target element)
+        // Purposefully omitted the shouldCreateChildrenOnPrepareElement block
+        // as that functionality is not applicable in this case
+        // (only works when there is a single target element)
+
+        // Create a template that will also be prepared
+        if ($this->shouldCreateTemplate) {
+            $templateElement = $this->getTemplateElement();
+            foreach ( (array) $templateElement as $elementOrFieldset ) {
+                $elementOrFieldset->setName($name . '[' . $elementOrFieldset->getName() . ']');
+
+                // Recursively prepare elements
+                if ($elementOrFieldset instanceof ElementPrepareAwareInterface) {
+                    $elementOrFieldset->prepareElement($form);
+                }
+            }
+        }
 
         // Zend\Form\Fieldset::prepareElement
         foreach ($this->byName as $elementOrFieldset) {
