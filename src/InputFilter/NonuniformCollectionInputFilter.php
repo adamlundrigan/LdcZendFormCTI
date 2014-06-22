@@ -95,9 +95,11 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
             $valid = false;
         }
 
-        if (empty($this->collectionData)) {
-            $this->clearValues();
-            $this->clearRawValues();
+        if (empty($data)) {
+            if ( method_exists($this, 'clearValues') ) {
+                $this->clearValues();
+                $this->clearRawValues();
+            }
 
             return $valid;
         }
