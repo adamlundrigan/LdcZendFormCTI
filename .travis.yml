@@ -16,6 +16,7 @@ env:
 install:
   - if [ "$ZF2_VER" != "DEFAULT" ]; then sed "s/{{VERSION}}/$ZF2_VER/g" .travisci/composer.json.tmpl > composer.json; fi;
   - composer install --dev
+  - composer show -i
 
 before_script:
 
