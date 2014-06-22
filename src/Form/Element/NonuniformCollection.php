@@ -17,7 +17,7 @@ class NonuniformCollection extends Collection
 
     protected $targetElement = array();
 
-    protected $templateElement = array();
+    protected $templateElement = NULL;
 
     protected $shouldCreateChildrenOnPrepareElement = false;
 

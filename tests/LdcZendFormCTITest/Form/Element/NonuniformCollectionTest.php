@@ -105,29 +105,21 @@ class NonuniformCollectionTest extends TestCase
         $this->assertEquals($someFakeData['account']['roles'][2]['b'], $roles[2]->getB());
     }
 
-    /**
-     * @dataProvider providerTestTemplateElementsArePreparedCorrectly
-     *
-     * @param bool   $shouldPrepareTemplate value passed to setShouldCreateTemplate
-     * @param string $expectedName          expected name of the template fieldsets
-     */
-    public function testTemplateElementsArePreparedCorrectly($shouldPrepareTemplate, $expectedName)
+    public function testTemplateElementsArePreparedCorrectlyWhenAsked()
     {
         $form = $this->getTestingForm();
+
+        $element = $form->get('account')->get('roles');
+        $element->setShouldCreateTemplate(true);
+
         $form->prepare();
 
-        $templates = $form->get('account')->get('roles')->getTemplateElement();
-        foreach ($templates as $objTemplate) {
-            $this->assertEquals($expectedName, $objTemplate->getName());
-        }
-    }
+        $templates = $element->getTemplateElement();
+        $this->assertNotEmpty($templates);
 
-    public function providerTestTemplateElementsArePreparedCorrectly()
-    {
-        return array(
-            array( true, 'account[roles][__index__]' ),
-            array( false, '__index__' ),
-        );
+        foreach ($templates as $objTemplate) {
+            $this->assertEquals('__index__', $objTemplate->getName());
+        }
     }
 
 }
