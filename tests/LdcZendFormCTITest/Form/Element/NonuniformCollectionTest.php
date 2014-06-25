@@ -122,4 +122,21 @@ class NonuniformCollectionTest extends TestCase
         }
     }
 
+    public function testTemplateElementHasDiscriminatorFieldSet()
+    {
+        $form = $this->getTestingForm();
+
+        $element = $form->get('account')->get('roles');
+        $element->setShouldCreateTemplate(true);
+
+        $form->prepare();
+
+        $templates = $element->getTemplateElement();
+        $this->assertNotEmpty($templates);
+
+        foreach ($templates as $discr => $objTemplate) {
+            $this->assertEquals($discr, $objTemplate->get('type')->getValue());
+        }
+    }
+
 }

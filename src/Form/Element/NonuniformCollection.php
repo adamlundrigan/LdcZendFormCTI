@@ -316,6 +316,7 @@ class NonuniformCollection extends Collection
         $element = array();
         foreach ($this->targetElement as $discr=>$fieldset) {
             $element[$discr] = clone $fieldset;
+            $element[$discr]->get($this->getDiscriminatorFieldName())->setValue($discr);
             $element[$discr]->setName($this->templatePlaceholder);
         }
 
