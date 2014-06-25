@@ -1,0 +1,25 @@
+<div class="row form-group">
+    <?php $element = $this->instance->get('id'); ?>
+    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+    <?php $element->setAttribute('class', 'form-control'); ?>
+
+    <?php echo $this->formLabel($element) ?>
+    <div class="col-sm-8">
+        <?php echo $this->escapeHtml($element->getValue()); ?>
+        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+    </div>
+</div>
+<div class="row form-group">
+    <?php $element = $this->instance->get('accountId'); ?>
+    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+    <?php $element->setAttribute('class', 'form-control'); ?>
+
+    <?php echo $this->formLabel($element) ?>
+    <div class="col-sm-8">
+        <?php echo $this->escapeHtml($element->getValue()); ?>
+        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+    </div>
+</div>
+
+<?php $element = $this->instance->get('type'); ?>
+<?php echo $this->formElement($element) . $this->formElementErrors($element) ?>

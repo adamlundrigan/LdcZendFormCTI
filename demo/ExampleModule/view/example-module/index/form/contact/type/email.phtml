@@ -1,0 +1,11 @@
+<?php echo $this->render('example-module/index/form/contact/type/common', $this->vars()); ?>
+<div class="row form-group">
+    <?php $element = $this->instance->get('emailAddress'); ?>
+    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+    <?php $element->setAttribute('class', 'form-control'); ?>
+
+    <?php echo $this->formLabel($element) ?>
+    <div class="col-sm-8">
+        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+    </div>
+</div>

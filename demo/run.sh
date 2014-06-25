@@ -12,8 +12,8 @@ fi;
 composer install --dev;
 composer require zendframework/zftool:dev-master;
 
-rm -R module/ExampleModule;
-php vendor/bin/zf.php create module ExampleModule;
+cp ../application.config.php.dist config/application.config.php;
+
 rm -R module/ExampleModule;
 cd module;
 ln -s ../../ExampleModule;

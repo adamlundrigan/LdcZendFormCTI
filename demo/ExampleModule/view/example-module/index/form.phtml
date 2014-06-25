@@ -1,0 +1,71 @@
+<?php 
+$fieldset = $form->get('account'); 
+?>
+
+<div class="row">
+    <div class="col-md-7">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Account Details</div>
+            <div class="panel-body">
+
+                <div class="row form-group">
+                    <?php $element = $fieldset->get('id'); ?>
+                    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+                    <?php $element->setAttribute('class', 'form-control'); ?>
+
+                    <?php echo $this->formLabel($element) ?>
+                    <div class="col-sm-8">
+                        <?php echo $this->escapeHtml($element->getValue()); ?>
+                        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <?php $element = $fieldset->get('displayName'); ?>
+                    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+                    <?php $element->setAttribute('class', 'form-control'); ?>
+
+                    <?php echo $this->formLabel($element) ?>
+                    <div class="col-sm-8">
+                        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <?php $element = $fieldset->get('username'); ?>
+                    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+                    <?php $element->setAttribute('class', 'form-control'); ?>
+
+                    <?php echo $this->formLabel($element) ?>
+                    <div class="col-sm-8">
+                        <?php echo $this->formElement($element) . $this->formElementErrors($element) ?>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <?php $element = $fieldset->get('contacts'); ?>
+                    <?php $element->setLabelAttributes(array('class' => 'col-sm-4 control-label')); ?>
+                    <?php $element->setAttribute('class', 'form-control'); ?>
+
+                    <?php echo $this->formLabel($element) ?>
+                    <div class="col-sm-8">
+                        <?php echo $this->plugin('formNonuniformCollection')
+                                        ->setCollection($element)
+                                        ->setInstanceDiscriminatorFieldName('type')
+                                        ->setOuterContainerTemplate('example-module/index/form/contact/outer-container')
+                                        ->setInstanceContainerTemplate('example-module/index/form/contact/instance-container')
+                                        ->setInstanceTemplateMap(array(
+                                            'email'     => 'example-module/index/form/contact/type/email',
+                                            'mailaddr'  => 'example-module/index/form/contact/type/mailaddr',
+                                            'telephone' => 'example-module/index/form/contact/type/telephone',
+                                        ))
+                                        ->render();                                        
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
