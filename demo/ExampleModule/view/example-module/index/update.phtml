@@ -1,0 +1,18 @@
+<?php 
+
+if ( isset($success) && $success ) {
+    echo '<div class="alert alert-success">Form validated successfully!</div>';
+    echo '<pre>' . var_export($entity, true) . '</pre>';
+}
+
+$form->setAttribute('class', 'form-horizontal');
+$form->prepare();
+
+$submitButton = $form->get('submit');
+$submitButton->setLabel('Update!');
+$submitButton->setAttribute('class', 'btn btn-lg btn-success');
+
+echo $this->form()->openTag($form);
+echo $this->render('example-module/index/form', $this->vars());
+echo $this->formButton($submitButton);
+echo $this->form()->closeTag();

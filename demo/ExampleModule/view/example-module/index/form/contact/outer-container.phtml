@@ -1,0 +1,32 @@
+<div id="ContactContainer">
+    <div class="contact-instances">
+    <?php echo $this->helper->renderInstances(); ?>
+    </div>
+    
+    <div class="btn-group contact-addnew">
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          <span class="glyphicon glyphicon-plus"></span> Add New Record&nbsp;&nbsp;<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <?php foreach ($this->collection->getTargetElement() as $item): ?>
+            <li><a href="javascript:;" data-key="<?php echo $this->escapeHtmlAttr($item->getName()); ?>"><?php echo $this->escapeHtml($item->getName()); ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        var contactInstanceTemplates = {};
+        <?php foreach ( $this->collection->getTemplateElement() as $discr => $fsTmpl ): ?>
+        contactInstanceTemplates['<?php echo $this->escapeJs($discr);?>'] = '<?php echo $this->escapeJs($this->helper->renderTemplateFor($fsTmpl)); ?>';
+        <?php endforeach; ?>
+        var contactInstanceIndex = <?php echo $this->escapeJs(count($this->collection)); ?>
+
+        $(document).on('click', '#ContactContainer .contact-addnew a[data-key]', function() {
+            var html = contactInstanceTemplates[$(this).attr('data-key')].replace(/__index__/g, contactInstanceIndex++);
+            $('#ContactContainer .contact-instances').append(html);
+        });
+        $(document).on('click', '#ContactContainer .contact-remove', function() {
+            $(this).closest('.contact-instance').remove();
+        });
+    </script>
+
+</div>

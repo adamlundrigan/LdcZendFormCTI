@@ -1,0 +1,10 @@
+<div class="panel panel-default contact-instance">
+    <div class="panel-heading">
+        <div class="pull-right"><a class="btn btn-xs btn-danger contact-remove"><i class="glyphicon glyphicon-remove"></i></a></div>
+        <?php echo $this->escapeHtml($this->instanceType); ?>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->helper->renderInstance($this->instance); ?>
+    </div>
+</div>
+
