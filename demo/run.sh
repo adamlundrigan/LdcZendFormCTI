@@ -10,7 +10,6 @@ else
 fi;
 
 composer install --dev;
-composer require zendframework/zftool:dev-master;
 
 cp ../application.config.php.dist config/application.config.php;
 
