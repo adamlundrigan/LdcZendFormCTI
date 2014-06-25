@@ -1,0 +1,40 @@
+<?php $uniqueKey = sha1($this->collection->getName()); ?>
+
+<fieldset id="<?php echo $this->escapeHtmlAttr($uniqueKey); ?>">
+    <legend><?php echo $this->escapeHtml($this->collection->getLabel()); ?></legend>
+    
+    <div class="instance-container">
+        <?php echo $this->helper->renderInstances(); ?>
+    </div>
+    
+    <hr />
+    
+    <p>Add instance to collection:</p>
+    <select class="new-instance-type">
+        <?php foreach ($this->collection->getTargetElement() as $item): ?>
+        <option value="<?php echo $this->escapeHtmlAttr($item->getName()); ?>"><?php echo $this->escapeHtml($item->getName()); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <button class="add-new-instance">Add</button>
+    
+    <script type="text/javascript">
+        var <?php echo $this->escapeJs($uniqueKey); ?>Templates = {};
+        <?php foreach ( $this->collection->getTemplateElement() as $discr => $fsTmpl ): ?>
+        <?php echo $this->escapeJs($uniqueKey); ?>Templates['<?php echo $this->escapeJs($discr);?>'] = '<?php echo $this->escapeJs($this->helper->renderTemplateFor($fsTmpl)); ?>';
+        <?php endforeach; ?>
+        var <?php echo $this->escapeJs($uniqueKey); ?>Index = <?php echo $this->escapeJs(count($this->collection)); ?>
+
+        $('#<?php echo $this->escapeHtmlAttr($uniqueKey); ?> .add-new-instance').click(function() {
+            var discr = $('#<?php echo $this->escapeHtmlAttr($uniqueKey); ?> select.new-instance-type option:selected').val();
+            var html = <?php echo $this->escapeJs($uniqueKey); ?>Templates[discr].replace(/__index__/g, <?php echo $this->escapeJs($uniqueKey); ?>Index++);
+            $('#<?php echo $this->escapeJs($uniqueKey); ?> .instance-container').append(html);
+            return false;
+        });
+        $(document).on('click', '#<?php echo $this->escapeJs($uniqueKey); ?> .remove-instance', function() {
+            $(this).closest('fieldset').remove();
+        });
+    </script>
+    
+</fieldset>
+
+<!-- @TOOD add new -->

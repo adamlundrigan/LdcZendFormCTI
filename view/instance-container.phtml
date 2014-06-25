@@ -1,0 +1,7 @@
+<fieldset>
+    <legend><?php echo $this->escapeHtml($this->instance->getName()); ?></legend>
+    
+    <?php echo $this->helper->renderInstance($this->instance); ?>
+    
+    <button class="remove-instance">Remove</button>
+</fieldset>
