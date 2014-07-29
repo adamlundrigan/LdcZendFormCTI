@@ -17,7 +17,7 @@ class NonuniformCollection extends Collection
 
     protected $targetElement = array();
 
-    protected $templateElement = NULL;
+    protected $templateElement = null;
 
     protected $shouldCreateChildrenOnPrepareElement = false;
 
@@ -252,7 +252,7 @@ class NonuniformCollection extends Collection
      * @param  string           $discriminator Discriminator of target element
      * @return ElementInterface
      */
-    protected function createNewTargetElementInstance($discriminator = NULL)
+    protected function createNewTargetElementInstance($discriminator = null)
     {
         if ( !isset($this->targetElement[$discriminator]) ) {
             return null;
@@ -269,7 +269,7 @@ class NonuniformCollection extends Collection
      * @return ElementInterface
      * @throws Exception\DomainException
      */
-    protected function addNewTargetElementInstance($name, $discriminator = NULL)
+    protected function addNewTargetElementInstance($name, $discriminator = null)
     {
         $this->shouldCreateChildrenOnPrepareElement = false;
 
