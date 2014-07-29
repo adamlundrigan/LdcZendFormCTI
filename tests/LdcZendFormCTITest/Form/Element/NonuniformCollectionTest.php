@@ -190,11 +190,11 @@ class NonuniformCollectionTest extends TestCase
                             'type' => 'c',
                             'c' => 'baz',
                             'options' => array(
-                            	array(
+                                array(
                                     'id' => '123456',
-                            	    'type' => 'one',
-                            	    'firstOption' => 'testtest',
-                            	),
+                                    'type' => 'one',
+                                    'firstOption' => 'testtest',
+                                ),
                                 array(
                                     'id' => '123457',
                                     'type' => 'one',
