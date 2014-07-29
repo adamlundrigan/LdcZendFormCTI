@@ -227,12 +227,9 @@ class NonuniformCollection extends Collection
 
         $values = array();
         foreach ($this->object as $key => $value) {
-
             $discriminator = $value->{$discrMethod}();
-            $hydrator = $this->targetElement[$discriminator]->getHydrator();
-            if ($hydrator) {
-                $values[$key] = $hydrator->extract($value);
-            } elseif ($value instanceof $this->targetElement[$discriminator]->object) {
+
+            if ($this->targetElement[$discriminator] instanceof FieldsetInterface && $value instanceof $this->targetElement[$discriminator]->object) {
                 // @see https://github.com/zendframework/zf2/pull/2848
                 $targetElement = clone $this->targetElement[$discriminator];
                 $targetElement->object = $value;
