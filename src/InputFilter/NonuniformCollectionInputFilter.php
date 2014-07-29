@@ -87,15 +87,15 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
             }
         }
 
-        $data = isset($this->collectionData)
-              ? $data = $this->collectionData
-              : $data = $this->data;
+        $dataset = isset($this->collectionData)
+              ? $this->collectionData
+              : $this->data;
 
-        if (count($data) < $this->getCount()) {
+        if (count($dataset) < $this->getCount()) {
             $valid = false;
         }
 
-        if (empty($data)) {
+        if (empty($dataset)) {
             if ( method_exists($this, 'clearValues') ) {
                 $this->clearValues();
                 $this->clearRawValues();
@@ -107,7 +107,7 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
         $filterSet = $this->getInputFilter();
         $discrKey  = $this->getDiscriminatorFieldName();
 
-        foreach ($data as $key => $data) {
+        foreach ($dataset as $key => $data) {
             if (!is_array($data)) {
                 $data = array();
             }
