@@ -6,6 +6,7 @@ php:
   - "5.5"
   - "5.6"
   - "hhvm"
+  - "hhvm-nightly"
 
 env:
   - ZF2_VER="DEFAULT"
@@ -28,6 +29,3 @@ script:
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - php: 5.6
-    - php: hhvm
