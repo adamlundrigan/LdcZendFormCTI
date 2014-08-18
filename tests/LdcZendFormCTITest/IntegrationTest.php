@@ -7,8 +7,8 @@ class IntegrationTest extends TestCase
     {
         $entity = $this->getTestingEntity();
 
-        $baseFilter = new \Zend\InputFilter\InputFilter;
-        $accountFilter = new \Zend\InputFilter\InputFilter;
+        $baseFilter = new \Zend\InputFilter\InputFilter();
+        $accountFilter = new \Zend\InputFilter\InputFilter();
         $accountFilter->add($this->getTestingInputFilter(), 'roles');
         $baseFilter->add($accountFilter, 'account');
 
@@ -23,8 +23,8 @@ class IntegrationTest extends TestCase
 
     public function testArrayToEntityHappyCase()
     {
-        $baseFilter = new \Zend\InputFilter\InputFilter;
-        $accountFilter = new \Zend\InputFilter\InputFilter;
+        $baseFilter = new \Zend\InputFilter\InputFilter();
+        $accountFilter = new \Zend\InputFilter\InputFilter();
         $accountFilter->add($this->getTestingInputFilter(), 'roles');
         $baseFilter->add($accountFilter, 'account');
 
