@@ -1,4 +1,5 @@
 <?php
+
 namespace LdcZendFormCTI\InputFilter;
 
 use Traversable;
@@ -6,17 +7,27 @@ use Zend\InputFilter\CollectionInputFilter;
 use Zend\InputFilter\Exception;
 use Zend\InputFilter\BaseInputFilter;
 
+/**
+ * Class NonuniformCollectionInputFilter
+ * @package LdcZendFormCTI\InputFilter
+ */
 class NonuniformCollectionInputFilter extends CollectionInputFilter
 {
+    /**
+     * @var string
+     */
     protected $discriminatorFieldName = '___class';
 
+    /**
+     * @var array
+     */
     protected $inputFilter = array();
 
     /**
      * Set name of form field which will be used as discriminator
      *
      * @param  string     $fn
-     * @return Collection
+     * @return NonuniformCollectionInputFilter
      */
     public function setDiscriminatorFieldName($fn)
     {
@@ -40,7 +51,7 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
      *
      * @param  array|Traversable          $inputFilter
      * @throws Exception\RuntimeException
-     * @return CollectionInputFilter
+     * @return NonuniformCollectionInputFilter
      */
     public function setInputFilter($filterSet)
     {
@@ -143,5 +154,4 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
 
         return $valid;
     }
-
 }
