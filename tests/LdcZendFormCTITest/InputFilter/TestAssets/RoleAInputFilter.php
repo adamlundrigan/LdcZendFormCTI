@@ -23,7 +23,7 @@ class RoleAInputFilter extends InputFilter
                 array(
                     'name' => 'InArray',
                     'options' => array(
-                        'haystack' => array('a')
+                        'haystack' => array('a'),
                     ),
                 ),
             ),

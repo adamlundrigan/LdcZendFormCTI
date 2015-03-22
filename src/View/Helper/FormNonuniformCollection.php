@@ -87,7 +87,7 @@ class FormNonuniformCollection extends AbstractHelper
         $discr = $instance->get($this->instanceDiscriminatorFieldName)->getValue();
 
         // If no override template is provided fall back to standard FormCollection render
-        if ( ! isset($this->instanceTemplateMap[$discr]) ) {
+        if (! isset($this->instanceTemplateMap[$discr])) {
             $row = new FormCollection();
             $row->setView($this->getView());
 

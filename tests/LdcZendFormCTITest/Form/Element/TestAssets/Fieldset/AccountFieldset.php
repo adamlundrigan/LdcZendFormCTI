@@ -5,7 +5,6 @@ use Zend\Form\Fieldset;
 
 class AccountFieldset extends Fieldset
 {
-
     public function __construct()
     {
         parent::__construct('account');
@@ -26,5 +25,4 @@ class AccountFieldset extends Fieldset
             ),
         ));
     }
-
 }

@@ -8,8 +8,7 @@ use Zend\InputFilter\Exception;
 use Zend\InputFilter\BaseInputFilter;
 
 /**
- * Class NonuniformCollectionInputFilter
- * @package LdcZendFormCTI\InputFilter
+ * Class NonuniformCollectionInputFilter.
  */
 class NonuniformCollectionInputFilter extends CollectionInputFilter
 {
@@ -24,9 +23,10 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
     protected $inputFilter = array();
 
     /**
-     * Set name of form field which will be used as discriminator
+     * Set name of form field which will be used as discriminator.
      *
-     * @param  string     $fn
+     * @param string $fn
+     *
      * @return NonuniformCollectionInputFilter
      */
     public function setDiscriminatorFieldName($fn)
@@ -37,7 +37,7 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
     }
 
     /**
-     * Retrieve name of form field used as discriminator
+     * Retrieve name of form field used as discriminator.
      *
      * @return string
      */
@@ -47,15 +47,17 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
     }
 
     /**
-     * Set the input filter to use when looping the data
+     * Set the input filter to use when looping the data.
      *
-     * @param  array|Traversable          $inputFilter
+     * @param array|Traversable $inputFilter
+     *
      * @throws Exception\RuntimeException
+     *
      * @return NonuniformCollectionInputFilter
      */
     public function setInputFilter($filterSet)
     {
-        if ( ! is_array($filterSet) && ! $filterSet instanceof Traversable) {
+        if (! is_array($filterSet) && ! $filterSet instanceof Traversable) {
             throw new Exception\RuntimeException(sprintf(
                 '%s expects an array of instances of %s; received "%s"',
                 __METHOD__,
@@ -107,7 +109,7 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
         }
 
         if (empty($dataset)) {
-            if ( method_exists($this, 'clearValues') ) {
+            if (method_exists($this, 'clearValues')) {
                 $this->clearValues();
                 $this->clearRawValues();
             }
@@ -122,13 +124,13 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
             if (!is_array($data)) {
                 $data = array();
             }
-            if ( ! isset($filterSet[$data[$discrKey]]) ) {
+            if (! isset($filterSet[$data[$discrKey]])) {
                 $valid = false;
                 $this->collectionMessages[$key] = array(
-                    $discrKey => sprintf('Could not map provided value (%s) to an input filter', $data[$discrKey])
+                    $discrKey => sprintf('Could not map provided value (%s) to an input filter', $data[$discrKey]),
                 );
                 $this->invalidInputs[$key] = array(
-                    $discrKey => $data[$discrKey]
+                    $discrKey => $data[$discrKey],
                 );
                 continue;
             }

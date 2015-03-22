@@ -6,7 +6,6 @@ use LdcZendFormCTI\InputFilter\NonuniformCollectionInputFilter;
 
 class NonuniformCollectionInputFilterTest extends TestCase
 {
-
     public function testSetInputFilterRejectsNonTraversableArgument()
     {
         $this->setExpectedException('Zend\InputFilter\Exception\RuntimeException');

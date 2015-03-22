@@ -3,7 +3,6 @@ namespace LdcZendFormCTITest\Form\Element;
 
 use LdcZendFormCTITest\TestCase;
 use LdcZendFormCTI\Form\Element\NonuniformCollection;
-use Zend\Form\Fieldset;
 use LdcZendFormCTITest\Form\Element\TestAssets\Fieldset\RoleC\OptionOneFieldset;
 use LdcZendFormCTITest\Form\Element\TestAssets\Fieldset\RoleC\OptionTwoFieldset;
 use LdcZendFormCTITest\Form\Element\TestAssets\Entity\RoleC\OptionOneEntity;
@@ -15,7 +14,6 @@ use Zend\Stdlib\ArrayUtils;
 
 class NonuniformCollectionTest extends TestCase
 {
-
     public function testSetDiscriminatorFieldNameOption()
     {
         $obj = new NonuniformCollection('test', array(

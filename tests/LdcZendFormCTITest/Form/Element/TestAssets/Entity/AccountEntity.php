@@ -42,5 +42,4 @@ class AccountEntity
 
         return $this;
     }
-
 }

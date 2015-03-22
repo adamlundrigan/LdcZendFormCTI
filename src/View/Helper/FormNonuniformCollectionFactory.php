@@ -7,9 +7,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class FormNonuniformCollectionFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create service.
      *
-     * @param  ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return Authentication
      */
     public function createService(ServiceLocatorInterface $sm)

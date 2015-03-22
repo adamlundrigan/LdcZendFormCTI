@@ -55,5 +55,4 @@ class RoleCEntity
 
         return $this;
     }
-
 }

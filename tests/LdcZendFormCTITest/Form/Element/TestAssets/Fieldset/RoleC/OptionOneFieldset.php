@@ -11,7 +11,7 @@ class OptionOneFieldset extends Fieldset
 
         $this->add(array(
             'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'id'
+            'name' => 'id',
         ));
 
         $this->add(array(
