@@ -4,7 +4,7 @@ namespace ExampleModule\InputFilter\Contact;
 use Zend\InputFilter\InputFilter;
 use LdcZendFormCTI\InputFilter\NonuniformCollectionInputFilter;
 
-class AbstractContactInputFilter extends InputFilter
+abstract class AbstractContactInputFilter extends InputFilter
 {
     public function __construct()
     {
