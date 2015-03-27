@@ -108,11 +108,11 @@ class NonuniformCollection extends Collection
     /**
      * Prepare the collection by adding a dummy template element if the user want one.
      *
-     * @param FormInterface $form
+     * @param FieldsetInterface $form
      *
      * @return mixed|void
      */
-    public function prepareElement(FormInterface $form)
+    public function prepareElement(FieldsetInterface $form)
     {
         $name = $this->getName();
 
