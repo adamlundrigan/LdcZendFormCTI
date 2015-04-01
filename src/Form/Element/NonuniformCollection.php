@@ -239,6 +239,11 @@ class NonuniformCollection extends Collection
                 $targetElement = clone $this->targetElement[$discriminator];
                 $targetElement->object = $value;
                 $values[$key] = $targetElement->extract();
+                
+                if (!isset($values[$key][$discrKey])) {
+                    $values[$key][$discrKey] = $discriminator;
+                }
+                
                 if ($this->has($key)) {
                     $fieldset = $this->get($key);
                     if ($fieldset instanceof Fieldset && $fieldset->allowObjectBinding($value)) {
