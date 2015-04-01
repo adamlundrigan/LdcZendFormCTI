@@ -209,6 +209,8 @@ class NonuniformCollection extends Collection
             } else {
                 $elementOrFieldset->setAttribute('value', $value);
             }
+            
+            $this->add($elementOrFieldset);
         }
 
         if (!$this->createNewObjects()) {
