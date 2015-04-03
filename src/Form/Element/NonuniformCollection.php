@@ -134,7 +134,7 @@ class NonuniformCollection extends Collection
         }
 
         // Zend\Form\Fieldset::prepareElement
-        foreach ($this->byName as $elementOrFieldset) {
+        foreach ($this->iterator as $elementOrFieldset) {
             $elementOrFieldset->setName($this->getName().'['.$elementOrFieldset->getName().']');
 
             // Recursively prepare elements
@@ -176,7 +176,7 @@ class NonuniformCollection extends Collection
         }
 
         // Check to see if elements have been replaced or removed
-        foreach ($this->byName as $name => $elementOrFieldset) {
+        foreach ($this->iterator as $name => $elementOrFieldset) {
             if (isset($data[$name])) {
                 continue;
             }
