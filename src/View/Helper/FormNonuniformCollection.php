@@ -1,4 +1,5 @@
 <?php
+
 namespace LdcZendFormCTI\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -68,7 +69,7 @@ class FormNonuniformCollection extends AbstractHelper
 
     public function renderInstances()
     {
-        $result = "";
+        $result = '';
 
         foreach ($this->collection as $instance) {
             $discr = $instance->get($this->instanceDiscriminatorFieldName)->getValue();

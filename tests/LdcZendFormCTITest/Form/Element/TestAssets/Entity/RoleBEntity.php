@@ -1,4 +1,5 @@
 <?php
+
 namespace LdcZendFormCTITest\Form\Element\TestAssets\Entity;
 
 class RoleBEntity

@@ -1,4 +1,5 @@
 <?php
+
 namespace LdcZendFormCTITest\InputFilter\TestAssets;
 
 use Zend\InputFilter\BaseInputFilter;
