@@ -127,7 +127,9 @@ class NonuniformCollectionInputFilter extends CollectionInputFilter
             if (! isset($filterSet[$data[$discrKey]])) {
                 $valid = false;
                 $this->collectionMessages[$key] = array(
-                    $discrKey => sprintf('Could not map provided value (%s) to an input filter', $data[$discrKey]),
+                    $discrKey => [
+						sprintf('Could not map provided value (%s) to an input filter', $data[$discrKey]),
+					]
                 );
                 $this->invalidInputs[$key] = array(
                     $discrKey => $data[$discrKey],
